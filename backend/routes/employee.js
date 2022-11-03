@@ -53,13 +53,20 @@ router.route("/update/:id").put( async (req,res)=>{
 
     let userId = req.params.id;
 
+    console.log("user id : ", userId);
+
     //D structure
-    const {name, possition, gender} = req.body;
+    const {pid, name, gender, age, height, weight, address, phone} = req.body;
 
     const updateEmployee = {
+        pid,
         name,
-        possition,
-        gender
+        gender,
+        age,
+        height,
+        weight,
+        address,
+        phone,
     }
 
     const update = await Employee.findByIdAndUpdate(userId, updateEmployee).then(()=>{

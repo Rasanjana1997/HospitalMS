@@ -9,25 +9,32 @@ import {
   } from "@ant-design/icons";
 import DataTable from "./common/DataTable";
 
+import EditPatientDialog from "./EditPatientDialog";
+import DeletePatient from "./DeletePatient";
+
 
 function ViewEmployer(){
 
     const[employees, setEmployees] = useState([]);
     const [tableLoading, setTableLoading] = useState(false);
 
+    const [editDialog, setEditDialog] = useState(() => ({ open: false }));
+    const [deleteDialog, setDeleteDialog] = useState(() => ({ open: false }));
+
     useEffect(()=>{
-        function getEmployees(){
-            setTableLoading(true);
-            axios.get("http://localhost:3005/employee/").then((res)=>{
-                setEmployees(res.data);
-                setTableLoading(false);
-                console.log("data :", res.data);
-            }).catch((err)=>{
-                alert(err.message);
-            })
-        }
         getEmployees();
     }, [])
+
+    function getEmployees(){
+      setTableLoading(true);
+      axios.get("http://localhost:3005/employee/").then((res)=>{
+          setEmployees(res.data);
+          setTableLoading(false);
+          console.log("data :", res.data);
+      }).catch((err)=>{
+          alert(err.message);
+      })
+    }
 
 
     const columns = [
@@ -87,7 +94,7 @@ function ViewEmployer(){
                         key: "Edit",
                         name: "Edit",
                         onClick: () => {
-                        //   setEditDialog({ open: true, id: record.id });
+                        setEditDialog({ open: true, record: record });
                         //   setName(record.name);
                         //   setSerialNo(record.serial_no);
                         //   // console.log("evidence : ", record.serial_no);
@@ -100,7 +107,8 @@ function ViewEmployer(){
                         name: "Delete",
                         title: "Delete",
                         onClick: () => {
-                        //   setDeleteDialog({ open: true, id: record.id });
+                          console.log("delete dialog");
+                          setDeleteDialog({ open: true, record: record });
                         },
                         icon: <DeleteOutlined />,
                         label: "Delete",
@@ -217,6 +225,9 @@ function ViewEmployer(){
                 )}
 
                 </table> */}
+
+          {editDialog.open && <EditPatientDialog refetch={ ()=> getEmployees() } record={editDialog.record} open={editDialog.open} onClose={() => setEditDialog({ open: false })} />}
+          {deleteDialog.open && <DeletePatient refetch={ ()=> getEmployees() } record={deleteDialog.record} open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false })} />}
 
         </div>
     );

@@ -1,6 +1,14 @@
 import React from 'react'
-import { Button, Form, Input, InputNumber } from 'antd';
+import { Button, Form, Input, InputNumber, message } from 'antd';
 import axios from "axios";
+
+const success = () => {
+    message.success('Succefully Added..');
+};
+
+const error = () => {
+    message.error('Error in Add Patient');
+};
 
 
 function AddPatient() {
@@ -27,10 +35,11 @@ function AddPatient() {
 
             console.log("add user");
             form.resetFields();
-            alert("Successfully added..");
+            success();
 
         }).catch((err) => {
-            alert(err.message)
+            console.log(err.message);
+            error();
         })
 
     }
