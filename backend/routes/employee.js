@@ -47,6 +47,20 @@ router.route("/").get( (req,res) =>{
 
 });
 
+//find one user
+router.route("/:keyword").get(async(req,res)=>{
+
+    console.log("keyword : ", req.params.keyword);
+
+    const user = await Employee.findOne({name : req.params.keyword}).then((employee)=>{
+        res.status(200).send({staus:"Single Patient fetched..", user: employee});
+    }).catch((err)=>{
+        console.log(err.message);
+        res.status(500).send({status:"error in Patient fetching..", error: err.message});
+    })
+
+});
+
 //using async can do multiple task at the same without any crash
 //Update fuction
 router.route("/update/:id").put( async (req,res)=>{
@@ -92,18 +106,5 @@ router.route("/delete/:id").delete(async(req,res)=>{
 
 });
 
-//find one user
-router.route("/get/:id").get(async(req,res)=>{
-
-    let userId = req.params.id;
-
-    const user = await Employee.findById(userId).then((employee)=>{
-        res.status(200).send({staus:"Employer fetched..", user: employee});
-    }).catch((err)=>{
-        console.log(err.message);
-        res.status(500).send({status:"error in Employer fetching..", error: err.message});
-    })
-
-});
 
 module.exports = router;

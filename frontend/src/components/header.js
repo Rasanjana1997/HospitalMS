@@ -13,18 +13,21 @@ function Header(){
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <Link to="/" className="nav-link active" >Home</Link>
+                            <Link to="/" className="nav-link active" >Dashboard</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/patient" className="nav-link active" >Patient</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/doctor" className="nav-link active" >Doctor</Link>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link active" href="#">About</a>
                         </li>
                         <li className="nav-item">
-                            <Link to="/add" className="nav-link active" >Add Patient</Link>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link active">Contact Us</a>
-                    </li>
-                </ul>
+                            <a className="nav-link active">Contact Us</a>
+                        </li>
+                    </ul>
                 <form className="d-flex">
                     <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
                     <button className="btn btn-outline-light" type="submit">Search</button>

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useDebugValue} from "react";
 import axios from "axios";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu, Input } from "antd";
 import {
     EditOutlined,
     CaretDownFilled,
@@ -11,9 +11,14 @@ import DataTable from "./common/DataTable";
 
 import EditPatientDialog from "./EditPatientDialog";
 import DeletePatient from "./DeletePatient";
+import { useHistory } from "react-router-dom";
+
+const { Search } = Input;
 
 
 function ViewEmployer(){
+
+    let history = useHistory();
 
     const[employees, setEmployees] = useState([]);
     const [tableLoading, setTableLoading] = useState(false);
@@ -22,10 +27,10 @@ function ViewEmployer(){
     const [deleteDialog, setDeleteDialog] = useState(() => ({ open: false }));
 
     useEffect(()=>{
-        getEmployees();
+      getPatients();
     }, [])
 
-    function getEmployees(){
+    function getPatients(){
       setTableLoading(true);
       axios.get("http://localhost:3005/employee/").then((res)=>{
           setEmployees(res.data);
@@ -34,6 +39,28 @@ function ViewEmployer(){
       }).catch((err)=>{
           alert(err.message);
       })
+    }
+
+
+    function searchPatient(value){
+      console.log("searched name : ", value);
+
+      if(employees !== null){
+        const newData = employees.filter((emp) => {
+          return emp.pid === value;
+        })
+        setEmployees(newData);
+      }
+      // // setTableLoading(true);
+      // axios.get(`http://localhost:3005/employee/${value}`).then((res)=>{
+      //     // setEmployees(res.data.user);
+      //     // setTableLoading(false);
+      //     console.log("search data :", res.data.user);
+      //     const newData = res.data.user;
+      //     setEmployees([newData]);
+      // }).catch((err)=>{
+      //     alert(err.message);
+      // })
     }
 
 
@@ -129,17 +156,42 @@ function ViewEmployer(){
       ];
 
 
+      const onSearch = (value) => {
+        console.log(value);
+        searchPatient(value);
+      }
+
+
     return(
             <div><br></br><br></br>
 
-            <h3 style={{textAlign:"start", marginLeft:"85px"}}>Patients List</h3>
+            <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
+
+              <h3 style={{textAlign:"start", marginLeft:"85px"}}>Patients List</h3>
+
+              <div style={{marginRight:"85px"}}>
+
+                <Search
+                  placeholder="search patient by id"
+                  allowClear
+                  onSearch={onSearch}
+                  style={{
+                    width: 300,
+                  }}
+                />
+
+                <Button type="primary" style={{textAlign:"start", marginLeft:"85px"}} onClick={() => { history.push('/add') }} >Add Patient</Button>
+
+              </div>
+
+            </div>
 
             <div style={{ marginLeft:"80px", marginRight:"80px", border:"1px solid #B8E8FC", borderRadius:"10px", marginTop:"40px" }} >
 
                 <DataTable
                 loading={tableLoading}
                 columns={columns}
-                data={employees}
+                data={[...employees]}
                 />
 
             </div>
@@ -226,8 +278,8 @@ function ViewEmployer(){
 
                 </table> */}
 
-          {editDialog.open && <EditPatientDialog refetch={ ()=> getEmployees() } record={editDialog.record} open={editDialog.open} onClose={() => setEditDialog({ open: false })} />}
-          {deleteDialog.open && <DeletePatient refetch={ ()=> getEmployees() } record={deleteDialog.record} open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false })} />}
+          {editDialog.open && <EditPatientDialog refetch={ ()=> getPatients() } record={editDialog.record} open={editDialog.open} onClose={() => setEditDialog({ open: false })} />}
+          {deleteDialog.open && <DeletePatient refetch={ ()=> getPatients() } record={deleteDialog.record} open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false })} />}
 
         </div>
     );
